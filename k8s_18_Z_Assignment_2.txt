@@ -1,0 +1,55 @@
+Learning Objectives:-
+Create the cron job in the cluster
+Allow the cron job to run successfully
+
+Problem Statement:-
+Your company has a simple data cleanup process that is run periodically for maintenance purposes. They would like to stop doing this manually in order to save time, so you have been asked to implement a cron job in the Kubernetes cluster to run this process. Create a cron job called cleanup-cronjob using the linuxacademycontent/data-cleanup:1 image. Have the job run every minute with the following cron expression: */1 * * * *.
+===========================================================================================
+vim cronjob.yml
+
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cleanup-cronjob
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: cronjob-ctr
+            image: linuxacademycontent/data-cleanup:1
+          restartPolicy: OnFailure
+After creating the cron job, get its status using this command:
+
+$ kubectl get cronjobs cleanup-cronjob
+NAME              SCHEDULE      SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+cleanup-cronjob   */1 * * * *   False     0        38s             2m45s
+ 
+Watch for the job to be created in around one minute:
+$ kubectl get jobs --watch
+NAME                         COMPLETIONS   DURATION   AGE
+cleanup-cronjob-1590626760   1/1           4s         2m54s
+cleanup-cronjob-1590626820   1/1           2s         114s
+cleanup-cronjob-1590626880   1/1           2s         54s
+cleanup-cronjob-1590626940   0/1                      0s
+cleanup-cronjob-1590626940   0/1           0s         0s
+cleanup-cronjob-1590626940   1/1           2s         2s
+cleanup-cronjob-1590626760   1/1           4s         3m10s
+cleanup-cronjob-1590627000   0/1                      0s
+cleanup-cronjob-1590627000   0/1           0s         0s
+cleanup-cronjob-1590627000   1/1           2s         2s
+cleanup-cronjob-1590626820   1/1           2s         3m10s
+cleanup-cronjob-1590627060   0/1                      0s
+cleanup-cronjob-1590627060   0/1           0s         0s
+cleanup-cronjob-1590627060   1/1           2s         2s
+cleanup-cronjob-1590626880   1/1           2s         3m11s
+cleanup-cronjob-1590627120   0/1                      0s
+cleanup-cronjob-1590627120   0/1           0s         0s
+cleanup-cronjob-1590627120   1/1           2s         2s
+cleanup-cronjob-1590626940   1/1           2s         3m11s
+
+Cron jobs are useful for creating periodic and recurring tasks, like running
+ backups or sending emails. Cron jobs can also schedule individual tasks for
+ a specific time, such as if you want to schedule a job for a low activity period.
