@@ -1,5 +1,6 @@
 =========== Manual install
 Create minimum 2 EC2 instance each with4
+https://www.zekelabs.com/blog/how-to-install-kubernetes-cluster-on-aws-ec2-instances/(installing in aws instances-centos)
 
 apt-get update && apt-get install -y apt-transport-https
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
